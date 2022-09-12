@@ -29,7 +29,14 @@ async function updateArticle(article, articleId, picture = undefined) {
   // Check if picture are defined or not
   if (picture.path !== undefined) {
     const imageData = fs.readFileSync(picture.path);
-    Object.assign(article.picture, imageData);
+    await Article.update(
+      { picture: imageData },
+      {
+        where: {
+          id: articleId,
+        },
+      },
+    );
   }
 
   return Article.update(
