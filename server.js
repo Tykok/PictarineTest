@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const apiErrorHandler = require('./src/router/handling/apiErrorHandler');
 const logError = require('./src/router/handling/logError');
@@ -28,7 +28,7 @@ if (NODE_ENV === 'DEBUG') {
 }
 
 app.use(express.json()); // Return JSON
-app.use(fileUpload()); // Upload file
+// app.use(fileUpload()); // Upload file
 app.use(cors(corsOptions)); // Use CORS
 app.use('', require('./src/router/router'));
 

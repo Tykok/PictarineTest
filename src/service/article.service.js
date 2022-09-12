@@ -1,19 +1,55 @@
+const fs = require('fs');
 const { Article } = require('../db/models/article');
 
 /**
  * @param {Number} articleId
  * @returns {Object}
  */
-function getArticleById(articleId) {
+async function getArticleById(articleId) {
   return Article.findByPk(articleId);
 }
 
 /**
- * @param {Number} articleId
- * @returns {Object}
+ * @returns {Array}
  */
-function getAllArticle() {
+async function getAllArticle() {
   return Article.findAll();
 }
 
-module.exports = { getArticleById, getAllArticle };
+async function createArticle(article, picture) {
+  const imageData = fs.readFileSync(picture.path);
+  return Article.create({
+    title: article.title,
+    content: article.content,
+    picture: imageData,
+  });
+}
+
+async function updateArticle(article, articleId, picture = undefined) {
+  // Check if picture are defined or not
+  if (picture.path !== undefined) {
+    const imageData = fs.readFileSync(picture.path);
+    Object.assign(article.picture, imageData);
+  }
+
+  return Article.update(
+    article,
+    {
+      where: {
+        id: articleId,
+      },
+    },
+  );
+}
+
+async function deleteArticle(articleId) {
+  return Article.destroy({
+    where: {
+      id: articleId,
+    },
+  });
+}
+
+module.exports = {
+  getArticleById, getAllArticle, createArticle, updateArticle, deleteArticle,
+};

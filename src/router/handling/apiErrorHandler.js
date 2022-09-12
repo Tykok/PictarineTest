@@ -5,7 +5,7 @@ function apiErrorHandler(error, req, res, next) {
 
   // Manage error message with the throwing error
   switch (error.constructor.name) {
-      // All errors can't be captured in the switch statement
+    // All errors can't be captured in the switch statement
     default:
       dataError = { error: 'An error appears, and we can\'t explain where is coming from' };
       status = 500;

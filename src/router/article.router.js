@@ -1,6 +1,10 @@
 const express = require('express');
-const { getArticleById } = require('../service/article.service');
+const multer = require('multer');
+const {
+  getArticleById, getAllArticle, createArticle, updateArticle, deleteArticle,
+} = require('../service/article.service');
 
+const upload = multer({ dest: 'uploads/' });
 const articleRouter = express.Router();
 
 /**
@@ -12,10 +16,15 @@ const articleRouter = express.Router();
  */
 
 // Receive token & return price
-articleRouter.post('/', async (req, res) => {
-  res.send(
-    'This is a test',
-  );
+articleRouter.post('/', upload.single('picture'), async (req, res, next) => {
+  createArticle(req.body, req.file)
+    .then((article) => {
+      res.status(200)
+        .send(article);
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 articleRouter.get('/:id', async (req, res, next) => {
@@ -32,7 +41,7 @@ articleRouter.get('/:id', async (req, res, next) => {
 
 articleRouter.get('/', async (req, res, next) => {
   const { id } = req.params;
-  getArticleById(id)
+  getAllArticle(id)
     .then((article) => {
       res.status(200)
         .send(article);
@@ -42,15 +51,28 @@ articleRouter.get('/', async (req, res, next) => {
     });
 });
 
-articleRouter.put('/:id', async (req, res) => {
-  res.send(
-    'This is a test',
-  );
+articleRouter.put('/:id', upload.single('picture'), async (req, res, next) => {
+  const { id } = req.params;
+  updateArticle(req.body, id, req.file)
+    .then((article) => {
+      res.status(200)
+        .send(article);
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
-articleRouter.delete('/:id', async (req, res) => {
-  res.send(
-    'This is a test',
-  );
+articleRouter.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  deleteArticle(id)
+    .then(() => {
+      res.status(200)
+        .send('Article deleted successfully');
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
+
 module.exports = articleRouter;

@@ -23,7 +23,7 @@ Article.init({
   },
   picture: {
     type: DataTypes.BLOB,
-    allowNull: false,
+    allowNull: true,
   },
 }, {
   sequelize,
